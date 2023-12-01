@@ -1,35 +1,32 @@
+import kotlin.time.measureTimedValue
+
 object Day1 {
 
-    fun part1(): Int =
-        javaClass.classLoader.getResourceAsStream("day1")
-            ?.bufferedReader()?.readLines()?.sumOf { line ->
-                if (line.isEmpty()) 0
-                else {
-                    val firstDigit = line.first { it.isDigit() }
-                    val lastDigit = line.lastOrNull { it.isDigit() }
-                    "${firstDigit}${lastDigit ?: firstDigit}".toInt()
-                }
-            } ?: 0
+    fun part1(lines: List<String>): Int = lines.sumOf { line ->
+        if (line.isEmpty()) 0
+        else {
+            val firstDigit = line.first { it.isDigit() }
+            val lastDigit = line.lastOrNull { it.isDigit() }
+            "${firstDigit}${lastDigit ?: firstDigit}".toInt()
+        }
+    }
 
-    fun part2(): Int =
-        javaClass.classLoader.getResourceAsStream("day1")
-            ?.bufferedReader()?.readLines()?.sumOf { line ->
-                if (line.isEmpty()) 0
-                else {
-                    val strings = listOf(
-                        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-                        "1", "2", "3", "4", "5", "6", "7", "8", "9"
-                    )
-                    val firstMatch = line.findAnyOf(strings)
-                    val firstDigit = if (firstMatch?.second?.toCharArray()?.first()?.isDigit() == true)
-                        firstMatch.second.toInt() else firstMatch?.second?.wordToDigit() ?: 0
-                    val lastMatch = line.findLastAnyOf(strings)
-                    val lastDigit = if (lastMatch?.second?.toCharArray()?.first()?.isDigit() == true)
-                        lastMatch.second.toInt() else lastMatch?.second?.wordToDigit()
-                    "${firstDigit}${lastDigit ?: firstDigit}".toInt()
-                }
-            } ?: 0
+    fun part2(lines: List<String>): Int = lines.sumOf { line ->
+        if (line.isEmpty()) 0
+        else {
+            val firstMatch = line.findAnyOf(targetStrings)
+            val firstDigit = firstMatch?.second?.toIntOrNull() ?: firstMatch?.second?.wordToDigit() ?: 0
+            val lastMatch = line.findLastAnyOf(targetStrings)
+            val lastDigit = lastMatch?.second?.toIntOrNull() ?: lastMatch?.second?.wordToDigit()
+            "${firstDigit}${lastDigit ?: firstDigit}".toInt()
+        }
+    }
 }
+
+private val targetStrings = listOf(
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+    "1", "2", "3", "4", "5", "6", "7", "8", "9"
+)
 
 private fun String?.wordToDigit() = when (this) {
     "one"   -> 1
@@ -45,6 +42,8 @@ private fun String?.wordToDigit() = when (this) {
 }
 
 fun main() {
-    println(Day1.part1())
-    println(Day1.part2())
+    val lines = Day1::class.java.getResourceAsStream("day1")
+        ?.bufferedReader()?.readLines()?.toList() ?: emptyList()
+    println(measureTimedValue { Day1.part1(lines) }.let { "Part 1: ${it.value} in ${it.duration.inWholeMilliseconds} ms" })
+    println(measureTimedValue { Day1.part2(lines) }.let { "Part 2: ${it.value} in ${it.duration.inWholeMilliseconds} ms" })
 }
