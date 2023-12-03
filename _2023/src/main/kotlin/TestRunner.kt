@@ -15,7 +15,7 @@ object TestRunner {
         }
         println(
             "$name run $times times with result = $result, " +
-                    "total execution time = ${totalMillis}ms: " +
+                    "total execution time = ${totalMillis}ms, " +
                     "average execution time = ${totalMillis / times.toFloat()}ms"
         )
     }
